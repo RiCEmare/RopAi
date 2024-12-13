@@ -1,0 +1,14 @@
+# General
+.DS_Store
+Thumbs.db
+*.log
+.env
+.vscode/
+.idea/
+*.swp
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

@@ -1,0 +1,19 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Environment files
+.env/
+
+# Logs
+*.log
+
+# Instance folder (for Flask-like patterns, if used)
+instance/
+
+# Pytest cache
+.pytest_cache/
+
+# Virtual environments (if created in the backend folder)
+venv/
+.virtualenv/
