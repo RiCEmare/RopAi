@@ -86,7 +86,7 @@ async def locationdata(input: LocationData):
 
         if response.status_code == 200:
             data = response.json()
-            temp = data["result"]["temp"]["mean"] - 273.15
+            temp = round(data["result"]["temp"]["mean"] - 273.15,4)
             humidity = data["result"]["humidity"]["mean"]
             rainfall = data["result"]["precipitation"]["mean"] * 1000
 
