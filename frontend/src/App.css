@@ -1,38 +1,36 @@
 .App {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* For the horizontal scroll container */
+.scroll-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  overflow-x: scroll; /* Allows horizontal scrolling */
+  scroll-behavior: smooth; /* Smooth scrolling */
+  white-space: nowrap; /* Prevent line breaks */
+  scrollbar-width: none; /* For Firefox - hides scrollbar */
 }
 
-.App-link {
-  color: #61dafb;
+.scroll-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Edge - hides scrollbar */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.scroll-item {
+  flex: 0 0 100vw; /* Each section takes up 100% of the viewport width */
+  height: 100vh; /* Full viewport height */
 }
+
+.scroll-item.half-width {
+  flex: 0 0 50vw; /* Half of the viewport width */
+}
+
+.map-wrapper {
+  width: 100%; /* Full width of parent container */
+ /* Adjust the height as needed */
+}
+
+.leaflet-container {
+  width: 100%; /* Fill the wrapper */
+  height: 100%;
+}
+
+

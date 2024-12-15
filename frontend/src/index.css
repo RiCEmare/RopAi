@@ -11,6 +11,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body {
+  overflow: hidden; /* Hides all scrollbars */
+  width: 100%; /* Ensures the body doesn't overflow */
+  height: 100%;
+  
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

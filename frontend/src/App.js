@@ -1,37 +1,62 @@
+import React from "react";
 import "./App.css";
-import axios from "axios";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Predict from "./pages/Predict";
+import BuyKit from "./pages/BuyKit";
+import Results from "./pages/Results";
+import { useEffect, useRef } from "react";
 
 function App() {
-  async function submitData(data) {
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/predict", data);
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    }
-  }
+  const useHorizontalScroll = () => {
+    const scrollRef = useRef();
 
-  // Define the input data
-  const input = {
-    nitrogen: 10.0,
-    phosphorus: 5.0,
-    potassium: 3.0,
-    temperature: 25.0,
-    humidity: 80.0,
-    ph: 6.5,
-    rainfall: 200.0,
-    location: "Should be coordinates",
-    month: 7,
+    const onWheel = (e) => {
+      if (e.deltaY === 0) return;
+      e.preventDefault();
+      scrollRef.current.scrollTo({
+        left: scrollRef.current.scrollLeft + e.deltaY,
+        behavior: "smooth",
+      });
+    };
+
+    useEffect(() => {
+      // Store the ref value to unsubscribe from event during componentWillUnmount
+      let refValueHolder = null;
+      if (scrollRef) {
+        refValueHolder = scrollRef.current;
+        refValueHolder.addEventListener("wheel", onWheel);
+      }
+      return () => {
+        refValueHolder.removeEventListener("wheel", onWheel);
+      };
+    }, []);
+
+    return scrollRef;
   };
 
-  submitData(input);
-
+  const scrollRef = useHorizontalScroll();
   return (
-    <div className="App">
-      <header className="App-header">
-        <p class="text-3xl font-bold">RopAI, Edit App.js.</p>
-      </header>
-    </div>
+    <>
+      <Navbar />
+      <div
+        className="scroll-container"
+        ref={scrollRef}
+      >
+        <div className="scroll-item">
+          <Home />
+        </div>
+        <div className="scroll-item" style={{ flex: "0 0 50vw" }}>
+          <BuyKit />
+        </div>
+        <div className="scroll-item">
+          <Predict />
+        </div>
+        <div className="scroll-item">
+          <Results />
+        </div>
+      </div>
+    </>
   );
 }
 
