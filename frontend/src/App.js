@@ -5,9 +5,15 @@ import Home from "./pages/Home";
 import Predict from "./pages/Predict";
 import BuyKit from "./pages/BuyKit";
 import Results from "./pages/Results";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useContext } from "react";
+import { GlobalContext } from "./GlobalState";
 
 function App() {
+
+  const { pred } = useContext(GlobalContext); 
+
+
+
   const useHorizontalScroll = () => {
     const scrollRef = useRef();
 
@@ -52,9 +58,11 @@ function App() {
         <div className="scroll-item">
           <Predict />
         </div>
-        <div className="scroll-item">
-          <Results />
-        </div>
+        {pred && ( // Only render when `pred` is not null or has changed
+          <div className="scroll-item">
+            <Results />
+          </div>
+        )}
       </div>
     </>
   );

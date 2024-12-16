@@ -2,9 +2,15 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "../../node_modules/leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useState } from "react";
+import { useState, useContext  } from "react";
+import { predictCrop } from '../utils/apiCalls';
+import { GlobalContext } from '../GlobalState';
+
+
 
 const Predict = () => {
+
+  const { pred, setPred } = useContext(GlobalContext);
   // State to store the values of the inputs
   const [nitrogenInput, setnitrogenInput] = useState("");
   const [phosporusInput, setphosporusInput] = useState("");
@@ -34,14 +40,11 @@ const Predict = () => {
   });
 
   // Function to handle the submit action
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Input 1:", nitrogenInput);
-    console.log("Input 2:", phosporusInput);
-    console.log("Input 3:", potassiumInput);
-    console.log("Input 4:", pHInput);
-    console.log("Input 5:", monthInput);
-    console.log("Input 5:", position);
+    
+    const prediction = await predictCrop(nitrogenInput, phosporusInput, potassiumInput, pHInput, position, monthInput);
+    setPred(prediction);
     // You can send the data to an API or use it further
   };
 
