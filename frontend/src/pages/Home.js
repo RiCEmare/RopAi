@@ -1,7 +1,11 @@
 import React from "react";
+import { useContext } from "react";
+import { GlobalContext } from "../GlobalState";
 import grassImg from "../assets/grass.png";
 import quote from "../assets/quote.png";
-const Home = () => (
+const Home = () => {
+  const {scrollToSection } = useContext(GlobalContext);
+  return(
   <div className="min-h-screen text-white flex ">
     {/* Left side */}
     <div className="relative flex flex-col px-24 py-32 w-1/2 text-wrap font-zain font-light text-4xl">
@@ -12,15 +16,16 @@ const Home = () => (
         AI model to help farmers in Nepal make better decisions about which
         crops to plant, when to plant them, and when to harvest.
       </p>
-      <div className="bg-green items-center justify-center flex mt-8 w-52 rounded-lg">
+      <button className="bg-green items-center justify-center flex mt-8 w-52 rounded-lg" onClick={() => scrollToSection(1)}>
         <p className="font-bold my-3 mx-6">Get Started!</p>
-      </div>
+      </button>
     </div>
     <div className="w-1/2 justify-start flex mr-14">
     <img src={grassImg} alt="grass" className=" object-contain" />
     </div>
     
   </div>
-);
+  );
+};
 
 export default Home;
