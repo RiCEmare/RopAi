@@ -2,15 +2,13 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "../../node_modules/leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useState, useContext  } from "react";
-import { predictCrop } from '../utils/apiCalls';
-import { GlobalContext } from '../GlobalState';
-
-
+import { useState, useContext } from "react";
+import { predictCrop } from "../utils/apiCalls";
+import { GlobalContext } from "../GlobalState";
 
 const Predict = () => {
+  const { setPred, loading, setLoading } = useContext(GlobalContext);
 
-  const { pred, setPred } = useContext(GlobalContext);
   // State to store the values of the inputs
   const [nitrogenInput, setnitrogenInput] = useState("");
   const [phosporusInput, setphosporusInput] = useState("");
@@ -42,14 +40,35 @@ const Predict = () => {
   // Function to handle the submit action
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const prediction = await predictCrop(nitrogenInput, phosporusInput, potassiumInput, pHInput, position, monthInput);
-    setPred(prediction);
-    // You can send the data to an API or use it further
+    setLoading(true); // Show the loading screen
+  
+    try {
+      const prediction = await predictCrop(
+        nitrogenInput,
+        phosporusInput,
+        potassiumInput,
+        pHInput,
+        position,
+        monthInput
+      );
+      setPred(prediction);
+    } catch (error) {
+      console.error("Prediction error:", error);
+    } finally {
+      setLoading(false); // Hide the loading screen
+    }
   };
+  
 
   return (
     <div className="min-h-screen text-white flex font-zain">
+      {/* Loading Screen */}
+      {loading && (
+        <div className="loading-screen">
+          <div className="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      )}
       {/* Soil Characteristics */}
       <div className="flex align-top flex-col w-1/3 px-24 py-10">
         <p className="font-bold text-6xl">Enter Details:</p>
@@ -191,6 +210,7 @@ const Predict = () => {
           <div className="flex justify-end">
             <button
               onClick={handleSubmit}
+              disabled={loading}
               className="bg-green items-center justify-center flex mt-48 w-52 rounded-lg"
             >
               <p className="font-bold my-3 mx-6 text-4xl">Predict</p>

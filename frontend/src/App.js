@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
+import LoadingScreen from "./components/LoadingScreen";
 import Home from "./pages/Home";
 import Predict from "./pages/Predict";
 import BuyKit from "./pages/BuyKit";
@@ -11,8 +12,6 @@ import { GlobalContext } from "./GlobalState";
 function App() {
 
   const { pred } = useContext(GlobalContext); 
-
-
 
   const useHorizontalScroll = () => {
     const scrollRef = useRef();
@@ -45,6 +44,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <LoadingScreen />
       <div
         className="scroll-container"
         ref={scrollRef}

@@ -3,16 +3,7 @@ import { useState, useContext, useEffect } from "react";
 import { GlobalContext } from "../GlobalState";
 
 const Results = () => {
-  const { pred } = useContext(GlobalContext);
-
-  const scrollToResults = () => {
-    const container = document.querySelector(".scroll-container");
-    const sectionWidth = window.innerWidth; // Width of one section
-    container.scrollTo({
-      left: 3 * sectionWidth,
-      behavior: "smooth", // Smooth scrolling
-    });
-  };
+  const { pred, scrollToSection } = useContext(GlobalContext);
 
   console.log("Predictions:", pred);
 
@@ -26,7 +17,7 @@ const Results = () => {
     return topCrops.map((crop) => ({
       name: crop.name, // Include the name
       width: `${(crop.probability * 36).toFixed(2)}rem`, // Scale the width (max 36rem)
-      percent: Math.round(crop.probability * 100), // Convert probability to percentage
+      percent: (crop.probability * 100).toFixed(2), // Convert probability to percentage
     }));
   };
 
@@ -43,9 +34,9 @@ const Results = () => {
       // Transform the data whenever pred changes
       const transformedCrops = transformTop5Crops(pred);
       setCrops(transformedCrops); // Update the state
-      scrollToResults(); // Scroll to the results section
+      scrollToSection(3); // Scroll to the results section
     }
-  }, [pred]); // Dependency array to monitor changes in pred
+  }, [pred, scrollToSection]); // Dependency array to monitor changes in pred
   return (
     <div className="min-h-screen text-white flex flex-col font-zain">
       {/* Soil Characteristics */}

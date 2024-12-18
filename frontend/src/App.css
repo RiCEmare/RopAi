@@ -19,10 +19,6 @@
   height: 100vh; /* Full viewport height */
 }
 
-.scroll-item.half-width {
-  flex: 0 0 50vw; /* Half of the viewport width */
-}
-
 .map-wrapper {
   width: 100%; /* Full width of parent container */
  /* Adjust the height as needed */
@@ -33,4 +29,37 @@
   height: 100%;
 }
 
+/* Loader overlay */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(23, 23, 23, 1); /* Semi-transparent background */
+  z-index: 2000; /* Ensure it is above content but below navbar */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
+/* Prevent scrolling */
+.no-scroll {
+  overflow: hidden;
+}
+
+/* Spinning PNG image */
+.loader-image {
+  width: 100px;
+  height: 100px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
