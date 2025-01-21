@@ -136,3 +136,23 @@ uvicorn main:app --reload
     "rainfall": 100
     }
     `
+- ### /cropinfo
+  - Request Example:
+    `
+    {
+    "name":"banana"
+    }
+    `
+  - Response Example:
+    `
+    {
+    "fact": "Bananas are technically berries, and the banana plant is the world's largest herb.",
+    "common_diseases": [
+      "Panama disease",
+      "Sigatoka leaf spot",
+      "Banana bunchy top virus"
+    ],
+    "plantation_time": "Throughout the year",
+    "planted_before": "Before 9–12 months"
+    }
+    `
