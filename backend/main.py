@@ -37,6 +37,7 @@ class LocationData(BaseModel):
     long: float
     month: int
 
+
 class CropName(BaseModel):
     name: str
 
@@ -66,13 +67,19 @@ async def predict(input: PredictionInput):
 
     probabilities = model.predict_proba(input_features)[0]
 
-    sorted_indices = np.argsort(probabilities)[::-1]
+    sorted_indices = np.argsort(probabilities)[::-1][:5]
 
     crops = []
     for idx in sorted_indices:
         crop_name = label_encoder.inverse_transform([idx])[0]
         crop_probability = float(probabilities[idx])
-        crops.append({"name": crop_name, "probability": round(crop_probability, 4)})
+        crops.append(
+            {
+                "name": crop_name,
+                "probability": round(crop_probability, 4),
+                "info": crop_info[crop_name],
+            }
+        )
 
     return {"crops": crops}
 
@@ -90,7 +97,7 @@ async def locationdata(input: LocationData):
 
         if response.status_code == 200:
             data = response.json()
-            temp = round(data["result"]["temp"]["mean"] - 273.15,4)
+            temp = round(data["result"]["temp"]["mean"] - 273.15, 4)
             humidity = data["result"]["humidity"]["mean"]
             rainfall = data["result"]["precipitation"]["mean"] * 1000
 
@@ -106,15 +113,3 @@ async def locationdata(input: LocationData):
             )
     except httpx.RequestError as e:
         raise HTTPException(status_code=500, detail=f"Request failed: {e}")
-    
-    
-@app.post("/cropinfo")
-def cropdata(input: CropName):
-    
-    crop_name = input.name.lower()
-    if crop_name in crop_info:
-        return crop_info[crop_name]
-    else:
-        raise HTTPException(status_code=404, detail="Crop not found in database")
-    
-    
