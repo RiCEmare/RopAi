@@ -6,6 +6,7 @@ import numpy as np
 from dotenv import load_dotenv
 import os
 import httpx
+from crop_info import crop_info
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -35,6 +36,9 @@ class LocationData(BaseModel):
     lat: float
     long: float
     month: int
+
+class CropName(BaseModel):
+    name: str
 
 
 with open("models/ropai_model.pkl", "rb") as model_file:
@@ -102,3 +106,15 @@ async def locationdata(input: LocationData):
             )
     except httpx.RequestError as e:
         raise HTTPException(status_code=500, detail=f"Request failed: {e}")
+    
+    
+@app.post("/cropinfo")
+def cropdata(input: CropName):
+    
+    crop_name = input.name.lower()
+    if crop_name in crop_info:
+        return crop_info[crop_name]
+    else:
+        raise HTTPException(status_code=404, detail="Crop not found in database")
+    
+    
