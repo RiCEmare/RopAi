@@ -1,65 +1,142 @@
 .App {
-  text-align: center;
-}
-/* For the horizontal scroll container */
-.scroll-container {
-  display: flex;
-  overflow-x: scroll; /* Allows horizontal scrolling */
-  scroll-behavior: smooth; /* Smooth scrolling */
-  white-space: nowrap; /* Prevent line breaks */
-  scrollbar-width: none; /* For Firefox - hides scrollbar */
+	text-align: center;
 }
 
-.scroll-container::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Edge - hides scrollbar */
+/* App wrapper */
+.app-wrapper {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	overflow: hidden;
 }
 
+/* Horizontal scroll container (desktop) */
+.scroll-container.horizontal {
+	display: flex;
+	flex-direction: row;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scrollbar-width: none;
+	flex: 1;
+	-webkit-overflow-scrolling: touch;
+}
+
+.scroll-container.horizontal::-webkit-scrollbar {
+	display: none;
+}
+
+/* Vertical scroll container (mobile) */
+.scroll-container.vertical {
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+	flex: 1;
+	-webkit-overflow-scrolling: touch;
+}
+
+.scroll-container.vertical::-webkit-scrollbar {
+	display: none;
+}
+
+/* Base scroll item */
 .scroll-item {
-  flex: 0 0 100vw; /* Each section takes up 100% of the viewport width */
-  height: 100vh; /* Full viewport height */
+	flex-shrink: 0;
+}
+
+/* Desktop: Different widths for each section */
+@media (min-width: 768px) {
+	.scroll-item.home-section {
+		width: 100vw;
+		min-height: calc(100vh - 120px);
+	}
+
+	.scroll-item.buykit-section {
+		width: 50vw;
+		min-height: calc(100vh - 120px);
+	}
+
+	.scroll-item.predict-section {
+		width: 100vw;
+		min-height: calc(100vh - 120px);
+	}
+
+	.scroll-item.results-section {
+		width: 100vw;
+		min-height: calc(100vh - 120px);
+	}
+}
+
+/* Mobile: Full width and auto height */
+@media (max-width: 767px) {
+	.scroll-item {
+		width: 100vw;
+		min-height: calc(100vh - 80px);
+	}
+
+	.scroll-item.buykit-section,
+	.scroll-item.predict-section {
+		min-height: auto;
+		padding-bottom: 2rem;
+	}
+}
+
+/* Page content transitions */
+.scroll-item > * {
+	animation: fadeSlideIn 0.6s ease-out;
+}
+
+@keyframes fadeSlideIn {
+	from {
+		opacity: 0.8;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .map-wrapper {
-  width: 100%; /* Full width of parent container */
- /* Adjust the height as needed */
+	width: 100%;
 }
 
 .leaflet-container {
-  width: 100%; /* Fill the wrapper */
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 /* Loader overlay */
 .loader-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(23, 23, 23, 1); /* Semi-transparent background */
-  z-index: 2000; /* Ensure it is above content but below navbar */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(23, 23, 23, 1);
+	z-index: 2000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-/* Prevent scrolling */
 .no-scroll {
-  overflow: hidden;
+	overflow: hidden;
 }
 
-/* Spinning PNG image */
 .loader-image {
-  width: 100px;
-  height: 100px;
-  animation: spin 2s linear infinite;
+	width: 100px;
+	height: 100px;
+	animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }

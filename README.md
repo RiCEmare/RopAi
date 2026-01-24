@@ -35,7 +35,7 @@ cd frontend
 npm install
 ```
 ```
-npm start
+npm run dev
 ```
 #### This launches the site at `localhost:3000`
 
