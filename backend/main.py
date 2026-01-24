@@ -36,6 +36,13 @@ class LocationData(BaseModel):
     lat: float
     long: float
     month: int
+    api_key: str = None  # Optional: user can provide their own API key
+
+
+class MockLocationData(BaseModel):
+    temperature: float
+    humidity: float
+    rainfall: float
 
 
 class CropName(BaseModel):
@@ -87,10 +94,19 @@ async def predict(input: PredictionInput):
 @app.post("/locationdata")
 async def locationdata(input: LocationData):
     try:
+        # Use user-provided API key or fall back to env variable
+        api_key = input.api_key if input.api_key else API_KEY
+
+        if not api_key:
+            raise HTTPException(
+                status_code=400,
+                detail="No API key provided. Please provide your OpenWeatherMap API key or use mock data.",
+            )
+
         # using httpx for async requests
         url = (
             f"https://history.openweathermap.org/data/2.5/aggregated/month"
-            f"?month={input.month}&lat={input.lat}&lon={input.long}&appid={API_KEY}"
+            f"?month={input.month}&lat={input.lat}&lon={input.long}&appid={api_key}"
         )
         async with httpx.AsyncClient() as client:
             response = await client.get(url)
@@ -113,3 +129,52 @@ async def locationdata(input: LocationData):
             )
     except httpx.RequestError as e:
         raise HTTPException(status_code=500, detail=f"Request failed: {e}")
+
+
+# Mock data endpoint for testing without API key
+@app.get("/mockweather")
+async def get_mock_weather():
+    """Returns sample weather data for testing the prediction system"""
+    return {
+        "temperature": 26.5,
+        "humidity": 75.0,
+        "rainfall": 120.0,
+        "note": "This is mock data for testing purposes",
+    }
+
+
+# Predict with manual weather inputs (no API key needed)
+@app.post("/predict-manual")
+async def predict_manual(input: PredictionInput):
+    """Predict crops using manually entered values including weather data"""
+    input_features = np.array(
+        [
+            [
+                input.nitrogen,
+                input.phosphorus,
+                input.potassium,
+                input.temperature,
+                input.humidity,
+                input.ph,
+                input.rainfall,
+            ]
+        ]
+    )
+
+    probabilities = model.predict_proba(input_features)[0]
+
+    sorted_indices = np.argsort(probabilities)[::-1][:5]
+
+    crops = []
+    for idx in sorted_indices:
+        crop_name = label_encoder.inverse_transform([idx])[0]
+        crop_probability = float(probabilities[idx])
+        crops.append(
+            {
+                "name": crop_name,
+                "probability": round(crop_probability, 4),
+                "info": crop_info[crop_name],
+            }
+        )
+
+    return {"crops": crops}
