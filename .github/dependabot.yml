@@ -12,6 +12,10 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # Major bumps need manual migration
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   # Backend (pip)
   - package-ecosystem: "pip"
