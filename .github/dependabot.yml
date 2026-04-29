@@ -1,24 +1,17 @@
 version: 2
 updates:
-  # Frontend (npm) — direct dependency updates
+  # Frontend (npm) — direct + transitive dependency updates
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
+    versioning-strategy: "increase-if-necessary"
     open-pull-requests-limit: 10
     groups:
       minor-and-patch:
         update-types:
           - "minor"
           - "patch"
-
-  # Frontend (npm) — refresh lock file to catch transitive CVEs
-  - package-ecosystem: "npm"
-    directory: "/frontend"
-    schedule:
-      interval: "weekly"
-    versioning-strategy: "lockfile-only"
-    open-pull-requests-limit: 5
 
   # Backend (pip)
   - package-ecosystem: "pip"
